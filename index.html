@@ -1,51 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Redirecting...</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <style>
-        body {
-            background: #ffffff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding-top: 40px;
-        }
-        .loading {
-            font-size: 20px;
-            color: #444;
-        }
-    </style>
-
-    <script>
-        (function () {
-            const query = window.location.search || "";
-            const deepLink = "sunnatmubarak://auth-callback" + query;
-
-            // Redirect instantly
-            window.location.replace(deepLink);
-
-            // Show fallback button if needed
-            setTimeout(() => {
-                document.getElementById("fallback").style.display = "block";
-            }, 1000);
-        })();
-    </script>
+  <meta charset="utf-8" />
+  <title>Redirecting…</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;background:#fff;color:#222;text-align:center;padding:40px}
+    .message{font-size:18px;margin-bottom:18px}
+    .btn{
+      display:inline-block;padding:14px 22px;border-radius:10px;background:#0b69ff;color:#fff;text-decoration:none;font-weight:600;
+      box-shadow: 0 6px 18px rgba(11,105,255,0.18);
+    }
+    .hint{margin-top:14px;color:#666;font-size:14px}
+  </style>
 </head>
 <body>
+  <div class="message">Redirecting to Sunnat Mubarak app…</div>
 
-    <p class="loading">Redirecting to Sunnat Mubarak app…</p>
+  <!-- Visible fallback button -->
+  <a id="openAppBtn" class="btn" href="#" style="display:none">Open Sunnat Mubarak</a>
 
-    <div id="fallback" style="display:none; margin-top:20px;">
-        <a id="manualLink" href="#">Tap here if not redirected</a>
+  <div id="hint" class="hint" style="display:none">
+    If nothing happens, tap the button above. Or copy this code and paste into the app: <span id="code"></span>
+  </div>
 
-        <script>
-            const query = window.location.search || "";
-            const deepLink = "sunnatmubarak://auth-callback" + query;
-            document.getElementById("manualLink").href = deepLink;
-        </script>
-    </div>
+  <script>
+    (function(){
+      const query = window.location.search || "";
+      const deepLink = "sunnatmubarak://auth-callback" + query;
 
+      // 1) Try forced navigation (may be blocked by some browsers if no gesture)
+      try {
+        window.location.replace(deepLink);
+      } catch (e) {
+        // ignore
+      }
+
+      // 2) Show a large tappable fallback after small delay
+      setTimeout(() => {
+        const btn = document.getElementById('openAppBtn');
+        const hint = document.getElementById('hint');
+        const codeEl = document.getElementById('code');
+
+        btn.href = deepLink;
+        btn.style.display = "inline-block";
+        hint.style.display = "block";
+
+        // show code string for debugging / manual copying
+        const params = new URLSearchParams(query);
+        const code = params.get('code') || '';
+        codeEl.innerText = code;
+
+        // Attempt a user-gesture friendly click: user tap will open app
+        // (programmatic click often blocked; keep manual).
+      }, 700);
+
+      // 3) For analytics / fallback: write to console
+      console.log("Redirect script running — deepLink:", deepLink);
+    })();
+  </script>
 </body>
 </html>
