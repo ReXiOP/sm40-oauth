@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Redirecting...</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Prevent showing a white page for long -->
     <style>
         body {
             background: #ffffff;
             font-family: Arial, sans-serif;
             text-align: center;
-            margin-top: 40px;
+            padding-top: 40px;
         }
         .loading {
             font-size: 20px;
@@ -22,16 +20,13 @@
 
     <script>
         (function () {
-            // Extract query parameters from the URL
             const query = window.location.search || "";
-
-            // Deep link to your app
             const deepLink = "sunnatmubarak://auth-callback" + query;
 
-            // Try redirecting immediately
+            // Redirect instantly
             window.location.replace(deepLink);
 
-            // Fallback: after 1 second show manual button
+            // Show fallback button if needed
             setTimeout(() => {
                 document.getElementById("fallback").style.display = "block";
             }, 1000);
@@ -42,7 +37,6 @@
 
     <p class="loading">Redirecting to Sunnat Mubarak app…</p>
 
-    <!-- Fallback button if auto-redirect fails (rare) -->
     <div id="fallback" style="display:none; margin-top:20px;">
         <a id="manualLink" href="#">Tap here if not redirected</a>
 
